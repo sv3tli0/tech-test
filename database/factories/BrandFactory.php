@@ -2,12 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Vendor\Faker\Provider\ImagesProvider;
+use App\Vendor\Faker\Provider\PlaceholdCoProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Brand>
@@ -37,7 +35,7 @@ class BrandFactory extends Factory
             $expandRelationships
         );
 
-        $this->faker->addProvider(ImagesProvider::class);
+        $this->faker->addProvider(PlaceholdCoProvider::class);
     }
 
     /**
@@ -50,11 +48,11 @@ class BrandFactory extends Factory
         return [
             'brand_name' => $this->faker->company,
             // average 1/3 chance for both strings + 1/3 for null.
-            'brand_image' => $this->faker->optional(
-                1/3, $this->faker->optional(1/2)
-                    ->images(Storage::disk('public')->path('images'),640, 580),
-            )->imagesUrl,
-            'rating' => mt_rand(0,10),
+            'brand_image' => $this->faker->randomOptionalImage(
+                dir: Storage::disk('public')->path('images'),
+                word: true, // true=random word
+            ),
+            'rating' => mt_rand(0, 10),
         ];
     }
 }
